@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diseño Curricular 2040 – Restaurador de Ecosistemas Costeros Inteligentes</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --deep:   #010e1a;
+  --navy:   #031525;
+  --panel:  #051e30;
+  --teal:   #00c9be;
+  --cyan:   #5ef5ec;
+  --coral:  #ff6b4a;
+  --amber:  #ffba3b;
+  --mint:   #7dffd4;
+  --lilac:  #b59aff;
+  --text:   #c8e4f0;
+  --muted:  #4d7d98;
+  --border: rgba(255,255,255,0.07);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--deep);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;
+  font-weight:300;
+}
+
+/* ── CANVAS BG ── */
+canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ── LAYOUT ── */
+.wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:40px 24px 100px;}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:64px 0 48px;}
+.year-tag{
+  display:inline-block;
+  border:1px solid var(--teal);
+  color:var(--teal);
+  font-size:10px;letter-spacing:5px;
+  text-transform:uppercase;
+  padding:5px 18px;border-radius:40px;
+  margin-bottom:22px;font-weight:400;
+}
+.hero h1{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(1.8rem,5.5vw,3.4rem);
+  line-height:1.05;
+  background:linear-gradient(130deg,#fff 0%,var(--cyan) 55%,var(--teal) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-meta{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:16px;
+  margin-top:28px;
+}
+.meta-pill{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(0,201,190,0.07);
+  border:1px solid rgba(0,201,190,0.22);
+  border-radius:40px;padding:7px 18px;font-size:0.82rem;
+}
+.meta-pill .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.dot-teal{background:var(--teal);box-shadow:0 0 8px var(--teal);}
+.dot-coral{background:var(--coral);box-shadow:0 0 8px var(--coral);}
+.dot-amber{background:var(--amber);box-shadow:0 0 8px var(--amber);}
+
+/* ── PERFIL EGRESO ── */
+.perfil{
+  background:linear-gradient(135deg,rgba(0,201,190,0.08),rgba(94,245,236,0.03));
+  border:1px solid rgba(0,201,190,0.2);
+  border-left:3px solid var(--teal);
+  border-radius:14px;padding:28px 30px;margin:0 0 40px;
+}
+.perfil h2{
+  font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;
+  letter-spacing:4px;text-transform:uppercase;
+  color:var(--teal);margin-bottom:10px;
+}
+.perfil p{font-size:0.95rem;line-height:1.75;color:var(--text);}
+.perfil strong{color:var(--cyan);font-weight:400;}
+
+/* ── SECTION HEADER ── */
+.sec-head{
+  display:flex;align-items:center;gap:12px;
+  margin:48px 0 20px;
+}
+.sec-icon{
+  width:34px;height:34px;
+  background:rgba(0,201,190,0.1);
+  border:1px solid rgba(0,201,190,0.25);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.sec-head h2{
+  font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;
+}
+.sec-head h2 em{color:var(--teal);font-style:normal;}
+
+/* ── SEMESTER GRID ── */
+.sem-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:14px;
+}
+
+.sem-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;
+  transition:transform .3s,border-color .3s;
+}
+.sem-card:hover{transform:translateY(-4px);border-color:rgba(0,201,190,0.3);}
+
+.sem-header{
+  padding:14px 16px 12px;
+  display:flex;align-items:flex-start;gap:10px;
+}
+.sem-num{
+  font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;
+  line-height:1;flex-shrink:0;
+}
+.sem-title-block{}
+.sem-label{font-size:0.68rem;letter-spacing:3px;text-transform:uppercase;opacity:.5;font-weight:400;}
+.sem-title{font-family:'Syne',sans-serif;font-size:0.92rem;font-weight:700;color:#fff;margin-top:1px;}
+
+.sem-body{padding:0 16px 16px;}
+.sem-mat{
+  font-size:0.79rem;line-height:1.45;
+  padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  color:var(--text);
+  display:flex;align-items:flex-start;gap:8px;
+}
+.sem-mat:last-child{border-bottom:none;}
+.sem-mat::before{
+  content:'';width:4px;height:4px;border-radius:50%;
+  margin-top:5px;flex-shrink:0;
+}
+.sem-mat.field{color:var(--mint);}
+.sem-mat.field::before{background:var(--mint);box-shadow:0 0 6px var(--mint);}
+.sem-mat.tech{color:var(--cyan);}
+.sem-mat.tech::before{background:var(--cyan);box-shadow:0 0 6px var(--cyan);}
+.sem-mat.opt{color:var(--lilac);}
+.sem-mat.opt::before{background:var(--lilac);box-shadow:0 0 6px var(--lilac);}
+.sem-mat.proj{color:var(--coral);}
+.sem-mat.proj::before{background:var(--coral);box-shadow:0 0 6px var(--coral);}
+.sem-mat.base::before{background:var(--muted);}
+
+/* color themes per semester */
+.s1 .sem-num,.s1 .sem-label{color:#4ecdc4;}
+.s1 .sem-header{background:linear-gradient(135deg,rgba(78,205,196,0.12),transparent);}
+.s2 .sem-num,.s2 .sem-label{color:#45b7d1;}
+.s2 .sem-header{background:linear-gradient(135deg,rgba(69,183,209,0.12),transparent);}
+.s3 .sem-num,.s3 .sem-label{color:#96ceb4;}
+.s3 .sem-header{background:linear-gradient(135deg,rgba(150,206,180,0.12),transparent);}
+.s4 .sem-num,.s4 .sem-label{color:#00c9be;}
+.s4 .sem-header{background:linear-gradient(135deg,rgba(0,201,190,0.14),transparent);}
+.s5 .sem-num,.s5 .sem-label{color:#b59aff;}
+.s5 .sem-header{background:linear-gradient(135deg,rgba(181,154,255,0.12),transparent);}
+.s6 .sem-num,.s6 .sem-label{color:#ffba3b;}
+.s6 .sem-header{background:linear-gradient(135deg,rgba(255,186,59,0.12),transparent);}
+.s7 .sem-num,.s7 .sem-label{color:#ff9f7f;}
+.s7 .sem-header{background:linear-gradient(135deg,rgba(255,159,127,0.12),transparent);}
+.s8 .sem-num,.s8 .sem-label{color:#ff6b4a;}
+.s8 .sem-header{background:linear-gradient(135deg,rgba(255,107,74,0.16),transparent);}
+
+/* ── LEGEND ── */
+.legend{
+  display:flex;flex-wrap:wrap;gap:14px;
+  margin:0 0 32px;padding:16px 20px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:10px;
+}
+.leg-item{display:flex;align-items:center;gap:7px;font-size:0.78rem;color:var(--muted);}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ── COMPETENCIAS ── */
+.comp-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;margin-bottom:8px;
+}
+.comp-card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:14px;padding:22px 20px;
+  transition:border-color .3s,transform .3s;
+}
+.comp-card:hover{border-color:rgba(0,201,190,.3);transform:translateY(-3px);}
+.comp-card .c-icon{font-size:1.6rem;margin-bottom:12px;display:block;}
+.comp-card h3{
+  font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;
+  color:#fff;margin-bottom:8px;
+}
+.comp-card p{font-size:.82rem;color:var(--muted);line-height:1.6;}
+.comp-card p strong{font-weight:500;color:var(--text);}
+
+/* ── CAMPUS ── */
+.campus-box{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  margin-bottom:8px;
+}
+.camp-item{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;padding:18px 20px;
+  transition:border-color .3s;
+}
+.camp-item:hover{border-color:rgba(0,201,190,.25);}
+.camp-item h4{
+  font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;
+  color:var(--teal);margin-bottom:6px;
+}
+.camp-item p{font-size:.8rem;color:var(--muted);line-height:1.55;}
+
+/* ── QUOTE ── */
+.finale{
+  text-align:center;padding:52px 24px 32px;
+  border-top:1px solid rgba(255,255,255,.05);margin-top:48px;
+}
+.finale p{
+  font-family:'Syne',sans-serif;font-size:clamp(1.1rem,3vw,1.55rem);
+  font-weight:400;line-height:1.55;color:#fff;
+}
+.finale p em{color:var(--teal);font-style:normal;}
+.finale small{
+  display:block;margin-top:20px;
+  font-size:.75rem;color:var(--muted);font-weight:300;
+}
+
+/* ── STAT BAND ── */
+.stat-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;margin:0 0 40px;
+}
+.stat-cell{
+  background:var(--navy);padding:18px 14px;text-align:center;
+}
+.stat-cell .sv{
+  font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;
+  display:block;
+  background:linear-gradient(135deg,var(--cyan),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.stat-cell .sl{font-size:.7rem;color:var(--muted);margin-top:3px;line-height:1.4;}
+
+/* ── DOCENTE ── */
+.doc-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;margin-bottom:16px;
+}
+.doc-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;padding:22px 20px;
+  transition:transform .3s,border-color .3s;
+}
+.doc-card:hover{transform:translateY(-4px);}
+.doc-card.dc1{border-top:2px solid #4ecdc4;}
+.doc-card.dc1:hover{border-color:#4ecdc4;}
+.doc-card.dc2{border-top:2px solid var(--amber);}
+.doc-card.dc2:hover{border-color:var(--amber);}
+.doc-card.dc3{border-top:2px solid var(--lilac);}
+.doc-card.dc3:hover{border-color:var(--lilac);}
+.doc-icon{font-size:1.7rem;margin-bottom:12px;display:block;}
+.doc-card h3{
+  font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;
+  color:#fff;margin-bottom:6px;
+}
+.doc-card .doc-form{
+  font-size:.75rem;letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:10px;font-weight:400;
+}
+.dc1 .doc-form{color:#4ecdc4;}
+.dc2 .doc-form{color:var(--amber);}
+.dc3 .doc-form{color:var(--lilac);}
+.doc-card ul{list-style:none;padding:0;}
+.doc-card ul li{
+  font-size:.81rem;color:var(--muted);line-height:1.55;
+  padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);
+  display:flex;align-items:flex-start;gap:7px;
+}
+.doc-card ul li:last-child{border-bottom:none;}
+.doc-card ul li::before{
+  content:'→';font-size:.7rem;margin-top:2px;flex-shrink:0;opacity:.5;
+}
+.doc-shared{
+  background:rgba(0,201,190,0.05);
+  border:1px solid rgba(0,201,190,0.15);
+  border-radius:12px;padding:18px 22px;margin-bottom:8px;
+}
+.doc-shared h4{
+  font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;
+  color:var(--teal);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:12px;
+}
+.doc-shared-row{display:flex;flex-wrap:wrap;gap:10px;}
+.doc-tag{
+  font-size:.78rem;padding:5px 14px;border-radius:40px;
+  border:1px solid rgba(0,201,190,.2);color:var(--text);
+  display:flex;align-items:center;gap:6px;
+}
+.doc-tag::before{content:'✓';color:var(--teal);font-size:.7rem;}
+.doc-star{
+  background:rgba(255,186,59,0.06);
+  border:1px solid rgba(255,186,59,0.2);
+  border-left:3px solid var(--amber);
+  border-radius:10px;padding:14px 18px;margin-top:8px;
+  font-size:.83rem;color:var(--text);line-height:1.6;
+}
+.doc-star strong{color:var(--amber);font-weight:400;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.anim{animation:fadeUp .7s ease both;}
+
+@media(max-width:600px){
+  .sem-grid{grid-template-columns:1fr;}
+  .stat-row{grid-template-columns:repeat(2,1fr);}
+  .campus-box{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero anim">
+    <div class="year-tag">Licenciatura · Diseño Curricular 2040</div>
+    <h1>Restaurador de Ecosistemas<br>Costeros Inteligentes</h1>
+    <div class="hero-meta">
+      <div class="meta-pill"><span class="dot dot-teal"></span>4 años · 8 semestres</div>
+      <div class="meta-pill"><span class="dot dot-coral"></span>60% práctica en campo</div>
+      <div class="meta-pill"><span class="dot dot-amber"></span>Bahía de Banderas · Puerto Vallarta</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stat-row anim">
+    <div class="stat-cell"><span class="sv">8</span><div class="sl">Semestres</div></div>
+    <div class="stat-cell"><span class="sv">40</span><div class="sl">Materias totales</div></div>
+    <div class="stat-cell"><span class="sv">9 meses</span><div class="sl">Estancias profesionales</div></div>
+    <div class="stat-cell"><span class="sv">100 m²</span><div class="sl">Arrecife real al egresar</div></div>
+  </div>
+
+  <!-- PERFIL -->
+  <div class="perfil anim">
+    <h2>Perfil de Egreso</h2>
+    <p>El egresado <strong>diseña, implementa y monitorea</strong> sistemas híbridos de restauración costera
+    usando <strong>biotecnología, robótica e ingeniería</strong>. Gestiona proyectos de
+    <strong>turismo regenerativo</strong> y políticas de <strong>economía azul</strong>
+    para proteger zonas costeras, combinando ciencia de campo con visión empresarial.</p>
+  </div>
+
+  <!-- MALLA -->
+  <div class="sec-head anim">
+    <div class="sec-icon">🗂️</div>
+    <h2>Malla <em>Curricular</em></h2>
+  </div>
+
+  <div class="legend anim">
+    <div class="leg-item"><div class="leg-dot" style="background:#7dffd4;box-shadow:0 0 5px #7dffd4"></div>Práctica de campo</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#5ef5ec;box-shadow:0 0 5px #5ef5ec"></div>Tecnología / Robótica</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#b59aff;box-shadow:0 0 5px #b59aff"></div>Optativa</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#ff6b4a;box-shadow:0 0 5px #ff6b4a"></div>Proyecto integrador</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#4d7d98"></div>Base / Ciencias</div>
+  </div>
+
+  <div class="sem-grid">
+
+    <!-- SEM 1 -->
+    <div class="sem-card s1 anim">
+      <div class="sem-header">
+        <div class="sem-num">01</div>
+        <div class="sem-title-block">
+          <div class="sem-label">Semestre</div>
+          <div class="sem-title">Bases del Mar</div>
+        </div>
+      </div>
+      <div class="sem-body">
+        <div class="sem-mat base">Oceanografía de Bahía de Banderas</div>
+        <div class="sem-mat base">Biología Marina I</div>
+        <div class="sem-mat base">Matemáticas para Modelado Ambiental</div>
+        <div class="sem-mat base">Ética y Derecho Ambiental Mexicano</div>
+        <div class="sem-mat field">Buceo Científico I · cert. PADI</div>
+      </div>
+    </div>
+
+    <!-- SEM 2 -->
+    <div class="sem-card s2 anim" style="animation-delay:.05s">
+      <div class="sem-header">
+        <div class="sem-num">02</div>
+        <div class="sem-title-block">
+          <div class="sem-label">Semestre</div>
+          <div class="sem-title">Diagnóstico Costero</div>
+        </div>
+      </div>
+      <div class="sem-body">
+        <div class="sem-mat base">Biología Marina II</div>
+        <div class="sem-mat base">Química del Océano</div>
+        <div class="sem-mat tech">SIG Costera · QGIS</div>
+        <div class="sem-mat base">Física de Oleaje y Dinámica Costera</div>
+        <div class="sem-mat field">Campo I · Los Arcos y Marietas</div>
+      </div>
+    </div>
+
+    <!-- SEM 3 -->
+    <div class="sem-card s3 anim" style="animation-delay:.1s">
+      <div class="sem-header">
+        <div class="sem-num">03</div>
+        <div class="sem-title-block">
+          <div class="sem-label">Semestre</div>
+          <div class="sem-title">Bio-Ingeniería</div>
+        </div>
+      </div>
+      <div class="sem-body">
+        <div class="sem-mat base">Biotecnología de Corales</div>
+        <div class="sem-mat base">Ciencia de Materiales para el Mar</div>
+        <div class="sem-mat tech">Robótica Submarina I · ROV + IoT</div>
+        <div class="sem-mat base">Modelado de Clima y Huracanes</div>
+        <div class="sem-mat proj">Taller: Impresión 3D Arrecifal</div>
+      </div>
+    </div>
+
+    <!-- SEM 4 -->
+    <div class="sem-card s4 anim" style="animation-delay:.15s">
+      <div class="sem-header">
+        <div class="sem-num">04</div>
+        <div class="sem-title-block">
+          <div class="sem-label">Semestre</div>
+          <div class="sem-title">Restauración Activa</div>
+        </div>
+      </div>
+      <div class="sem-body">
+        <div class="sem-mat base">Ingeniería Costera Adaptativa</div>
+        <div class="sem-mat base">Restauración de Manglares y Dunas</div>
+        <div class="sem-mat tech">Robótica Submarina II · siembra autónoma</div>
+        <div class="sem-mat base">Economía Azul</div>
+        <div class="sem-mat field">Campo II · 1 mes arrecife piloto</div>
+      </div>
+    </div>
+
+    <!-- SEM 5 -->
+    <div class="sem-card s5 anim" style="animation-delay:.2s">
+      <div class="sem-header">
+        <div class="sem-num">05</div>
+        <div class="sem-title-block">
+          <div class="sem-label">Semestre</div>
+          <div class="sem-title">Tecnología y Datos</div>
+        </div>
+      </div>
+      <div class="sem-body">
+        <div class="sem-mat tech">IA para Monitoreo Marino</div>
+        <div class="sem-mat tech">Genómica Ambiental · eDNA</div>
+        <div class="sem-mat tech">Simulación de Ecosistemas</div>
+        <div class="sem-mat base">Turismo Regenerativo</div>
+        <div class="sem-mat base">Legislación y Permisos · MIA</div>
+      </div>
+    </div>
+
+    <!-- SEM 6 -->
+    <div class="sem-card s6 anim" style="animation-delay:.25s">
+      <div class="sem-header">
+        <div class="sem-num">06</div>
+        <div class="sem-title-block">
+          <div class="sem-label">Semestre</div>
+          <div class="sem-title">Gestión de Proyectos</div>
+        </div>
+      </div>
+      <div class="sem-body">
+        <div class="sem-mat base">Finanzas para Proyectos Ambientales</div>
+        <div class="sem-mat base">Comunicación Científica y Negociación</div>
+        <div class="sem-mat base">Evaluación de Impacto Ambiental y Social</div>
+        <div class="sem-mat opt">Optativa I · Acuacultura | Undimotriz</div>
+        <div class="sem-mat field">Estancia I · 3 meses ONG / hotel / gobierno</div>
+      </div>
+    </div>
+
+    <!-- SEM 7 -->
+    <div class="sem-card s7 anim" style="animation-delay:.3s">
+      <div class="sem-header">
+        <div class="sem-num">07</div>
+        <div class="sem-title-block">
+          <div class="sem-label">Semestre</div>
+          <div class="sem-title">Especialización</div>
+        </div>
+      </div>
+      <div class="sem-body">
+        <div class="sem-mat opt">Optativa II · Urbana | Carbono Azul</div>
+        <div class="sem-mat proj">Taller Emprendimiento Azul</div>
+        <div class="sem-mat base">Política Pública Costera</div>
+        <div class="sem-mat base">Gestión de Crisis post-huracán</div>
+        <div class="sem-mat proj">Seminario de Tesis I</div>
+      </div>
+    </div>
+
+    <!-- SEM 8 -->
+    <div class="sem-card s8 anim" style="animation-delay:.35s">
+      <div class="sem-header">
+        <div class="sem-num">08</div>
+        <div class="sem-title-block">
+          <div class="sem-label">Semestre</div>
+          <div class="sem-title">Integración Final</div>
+        </div>
+      </div>
+      <div class="sem-body">
+        <div class="sem-mat field">Estancia II · 6 meses proyecto real</div>
+        <div class="sem-mat proj">Tesis · defensa ante CONANP + hoteleros</div>
+        <div class="sem-mat tech">Cert. Final: buceo avanzado + ROV</div>
+        <div class="sem-mat proj">Proyecto Integrador · 100 m² arrecife</div>
+      </div>
+    </div>
+
+  </div><!-- /sem-grid -->
+
+  <!-- COMPETENCIAS -->
+  <div class="sec-head anim" style="margin-top:52px">
+    <div class="sec-icon">⚡</div>
+    <h2>Competencias <em>Clave</em></h2>
+  </div>
+  <div class="comp-grid">
+    <div class="comp-card anim">
+      <span class="c-icon">🤿</span>
+      <h3>Técnica</h3>
+      <p>Bucear, imprimir estructuras 3D, <strong>programar drones ROV</strong> y cultivar coral en vivero marino.</p>
+    </div>
+    <div class="comp-card anim" style="animation-delay:.07s">
+      <span class="c-icon">🔬</span>
+      <h3>Científica</h3>
+      <p>Diseñar experimentos con <strong>eDNA y visión computacional</strong>, analizar datos y publicar resultados.</p>
+    </div>
+    <div class="comp-card anim" style="animation-delay:.14s">
+      <span class="c-icon">🤝</span>
+      <h3>Social</h3>
+      <p>Negociar con cooperativas pesqueras, <strong>cadenas hoteleras y gobierno</strong> municipal y estatal.</p>
+    </div>
+    <div class="comp-card anim" style="animation-delay:.21s">
+      <span class="c-icon">💹</span>
+      <h3>Empresarial</h3>
+      <p>Medir ROI ambiental, gestionar <strong>green bonds</strong> y vender proyectos de restauración de hasta $1 M USD.</p>
+    </div>
+  </div>
+
+  <!-- DÓNDE ESTUDIAR -->
+  <div class="sec-head anim">
+    <div class="sec-icon">🏛️</div>
+    <h2>¿Dónde se <em>estudiaría?</em></h2>
+  </div>
+  <div class="campus-box anim">
+    <div class="camp-item">
+      <h4>Campus principal</h4>
+      <p>CUCosta · Universidad de Guadalajara · Puerto Vallarta. Infraestructura existente de biología marina y acceso directo a Bahía de Banderas.</p>
+    </div>
+    <div class="camp-item">
+      <h4>Alianzas estratégicas</h4>
+      <p>CICESE (Ensenada), UNAM Sisal (Yucatán), CONANP Área de Protección Los Arcos, Four Seasons · Vidanta · WWF México.</p>
+    </div>
+  </div>
+
+  <!-- PERFIL DOCENTE -->
+  <div class="sec-head anim">
+    <div class="sec-icon">👨‍🏫</div>
+    <h2>Perfil del <em>Docente</em></h2>
+  </div>
+
+  <div class="doc-grid">
+    <div class="doc-card dc1 anim">
+      <span class="doc-icon">🔬</span>
+      <div class="doc-form">Científico de Campo</div>
+      <h3>Biólogo marino u oceanógrafo</h3>
+      <ul>
+        <li>Experiencia real en arrecifes del Pacífico mexicano</li>
+        <li>Buceo científico certificado</li>
+        <li>Al menos un proyecto de restauración costera ejecutado o publicado</li>
+        <li>Perfil tipo CICESE, UNAM Sisal o CONANP</li>
+      </ul>
+    </div>
+    <div class="doc-card dc2 anim" style="animation-delay:.08s">
+      <span class="doc-icon">⚙️</span>
+      <div class="doc-form">Ingeniero-Tecnólogo</div>
+      <h3>Mecatrónico, robótico o biomateriales</h3>
+      <ul>
+        <li>Experiencia con drones ROV y sensores IoT fuera del laboratorio</li>
+        <li>Conocimiento de impresión 3D aplicada</li>
+        <li>Trabajo previo en entornos costeros o marinos</li>
+        <li>Perfil industria + academia</li>
+      </ul>
+    </div>
+    <div class="doc-card dc3 anim" style="animation-delay:.16s">
+      <span class="doc-icon">💼</span>
+      <div class="doc-form">Gestor-Emprendedor</div>
+      <h3>Economista, abogado ambiental o turismo sostenible</h3>
+      <ul>
+        <li>Proyectos gestionados con SEMARNAT o fondos GEF / BID</li>
+        <li>Experiencia en bonos de carbono azul</li>
+        <li>Capacidad de negociar entre pescadores, hoteleros y gobierno</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="doc-shared anim">
+    <h4>Competencias que todos deben compartir</h4>
+    <div class="doc-shared-row">
+      <div class="doc-tag">Enseñar en campo, no solo en aula</div>
+      <div class="doc-tag">Dialogar con sector privado y gobierno</div>
+      <div class="doc-tag">Publicar o haber publicado</div>
+      <div class="doc-tag">Trabajo interdisciplinar real</div>
+    </div>
+  </div>
+
+  <div class="doc-star anim">
+    ⭐ <strong>El perfil más valioso y más difícil de encontrar:</strong> quien cruza dos mundos — el biólogo que programa drones, o el ingeniero que hizo su tesis en arrecifes. Búscalo en Reef Check México o proyectos de restauración coralina de Quintana Roo y Jalisco.
+  </div>
+
+  <!-- FINALE -->
+  <div class="finale anim">
+    <p>
+      Vallarta vive del mar.<br>
+      Esta carrera convierte el océano en<br>
+      <em>el mayor activo económico de la ciudad</em><br>
+      para los próximos 15 años.
+    </p>
+    <small>Evaluación y Diseño Curricular · Maestría en Educación · Puerto Vallarta 2024</small>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+/* ── BIOLUMINESCENT BG ── */
+const cv=document.getElementById('c');
+const cx=cv.getContext('2d');
+function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+
+const pts=Array.from({length:90},()=>({
+  x:Math.random()*window.innerWidth,
+  y:Math.random()*window.innerHeight,
+  r:Math.random()*2.2+.4,
+  vy:Math.random()*.35+.08,
+  vx:(Math.random()-.5)*.25,
+  a:Math.random()*.45+.08,
+  col:Math.random()>.72?'255,107,74':Math.random()>.5?'0,201,190':'94,245,236'
+}));
+
+function frame(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  const g=cx.createRadialGradient(cv.width*.35,cv.height*.25,0,cv.width*.5,cv.height*.5,cv.width*.9);
+  g.addColorStop(0,'rgba(3,21,37,.55)');g.addColorStop(.6,'rgba(1,14,26,.4)');g.addColorStop(1,'rgba(1,6,14,.25)');
+  cx.fillStyle=g;cx.fillRect(0,0,cv.width,cv.height);
+  pts.forEach(p=>{
+    p.y-=p.vy;p.x+=p.vx;
+    if(p.y<-8){p.y=cv.height+8;p.x=Math.random()*cv.width;}
+    if(p.x<0)p.x=cv.width;if(p.x>cv.width)p.x=0;
+    cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    cx.fillStyle=`rgba(${p.col},${p.a})`;
+    cx.shadowBlur=p.r*5;cx.shadowColor=`rgba(${p.col},.7)`;
+    cx.fill();cx.shadowBlur=0;
+  });
+  requestAnimationFrame(frame);
+}
+frame();
+
+/* ── SCROLL REVEAL ── */
+const io=new IntersectionObserver(ents=>{
+  ents.forEach(e=>{if(e.isIntersecting)e.target.style.animationPlayState='running';});
+},{threshold:.08});
+document.querySelectorAll('.anim').forEach(el=>{
+  el.style.animationPlayState='paused';io.observe(el);
+});
+</script>
+</body>
+</html>
